@@ -102,8 +102,8 @@ final class SafeTest extends TestCase
 
         $data = ['known' => 'value'];
 
-        $result = Safe::get($data['unknown'], 'default-value');
+        $result = Safe::get(@$data['unknown'], 'default-value');
         $this->assertSame('default-value', $result);
-        $this->assertSame('default-fallback', Safe::get($undefinedVar ?? null, 'default-fallback'));
+        $this->assertSame('default-fallback', Safe::get(@$undefinedVar, 'default-fallback'));
     }
 }
