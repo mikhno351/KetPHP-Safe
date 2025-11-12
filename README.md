@@ -15,7 +15,7 @@ composer require ket-php/utils-safe
 
 ## Usage
 ```php
-use KetPHP\Util\Safe;
+use KetPHP\Utils\Safe;
 
 // Simple value
 $value = Safe::get('Hello'); 
