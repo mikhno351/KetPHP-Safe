@@ -1,7 +1,6 @@
 # KetSafe
 
-![GitHub Release](https://img.shields.io/github/v/release/mikhno351/UtilSafe)
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/mikhno351/UtilSafe/total?logo=github&logoColor=white)
+![Packagist Version](https://img.shields.io/packagist/v/ket-php/utils-safe)
 ![Packagist Downloads](https://img.shields.io/packagist/dt/ket-php/utils-safe?logo=packagist&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/PHP-8.1-777BB4?logo=php&logoColor=white)
 
