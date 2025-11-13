@@ -14,6 +14,12 @@ final class SafeTest extends TestCase
         $this->assertSame('Hello', $value);
     }
 
+    public function testReturnsDirectValueTrim(): void
+    {
+        $value = Safe::get('   Hello   ', null, 'trim');
+        $this->assertSame('Hello', $value);
+    }
+
     public function testReturnsCallableValue(): void
     {
         $value = Safe::get(fn() => 123);
