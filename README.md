@@ -13,6 +13,8 @@ composer require ket-php/utils-safe
 ```
 
 ## Usage
+
+### Safe:
 ```php
 use KetPHP\Utils\Safe;
 
@@ -61,7 +63,7 @@ $value = Safe::get($data['unknown'] ?? null, 'Default');
 echo $value; // Default
 ```
 
-## Constants for Casting
+#### Constants for Casting:
 | Constant            | Description     |
 | ------------------- | --------------- |
 | `Safe::CAST_INT`    | Cast to integer |
@@ -70,3 +72,34 @@ echo $value; // Default
 | `Safe::CAST_BOOL`   | Cast to boolean |
 | `Safe::CAST_ARRAY`  | Cast to array   |
 | `Safe::CAST_OBJECT` | Cast to object  |
+
+### Truth:
+```php
+use KetPHP\Utils\Truth;
+
+// Non-strict mode (default)
+var_dump(Truth::of(1)); // true
+var_dump(Truth::of('on')); // true
+var_dump(Truth::of('no')); // false
+var_dump(Truth::of(null)); // false
+
+// Strict mode
+var_dump(Truth::of('true', true)); // true
+var_dump(Truth::of('on', true)); // false
+var_dump(Truth::of(1, true)); // true
+var_dump(Truth::of(0, true)); // false
+
+// Using a callable
+var_dump(Truth::of(fn() => 'yes')); // true
+var_dump(Truth::of(fn() => 'no')); // false
+
+// Custom truthy list for a single call
+$custom = ['foo', 'bar', 123];
+var_dump(Truth::of('foo', false, $custom)); // true
+var_dump(Truth::of('baz', false, $custom)); // false
+
+// Configure global truthy values
+Truth::configure(['sure', 'ok']);
+var_dump(Truth::of('ok')); // true
+var_dump(Truth::of('yes')); // false (old default removed)
+```
