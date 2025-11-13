@@ -35,8 +35,7 @@ final class Truth
      * @var array<int, mixed>
      */
     private static array $truthyValues = [
-        1, true, '1', 'true', 'on', 'yes', 'yep', 'y', 'ok', '+', '==', '===', 'active', 'enable', 'enabled',
-        'check', 'checked', 'selected', 'accept', 'accepted', 'agree', 'allow', 'allowed', 'valid', 'ready'
+        1, true, '1', 'true', 'on', 'yes', 'y', 'ok', '+', 'active', 'enable', 'enabled'
     ];
 
     /**
@@ -56,88 +55,56 @@ final class Truth
     }
 
     /**
-     * Safely converts any value to boolean.
-     *
-     * - In strict mode:
-     *     Only `true`, `'true'`, `1`, `'1'` are true.
-     * - In non-strict mode:
-     *     Compares against built-in or custom truthy values (of any type).
+     * Safely convert a value to boolean.
      *
      * @param mixed $value The value to convert.
-     * @param bool $strict Enable strict mode (only true/1 accepted).
-     * @param array<int, mixed>|null $customTruthies Optional custom truthy list for this call.
+     * @param bool $strict Only accept true/1/'true'/'1' as true.
+     * @param array<int, mixed>|null $customTruthies Optional custom truthy list.
      *
-     * @return bool Normalized boolean.
+     * @return bool
      */
     public static function of(mixed $value, bool $strict = false, ?array $customTruthies = null): bool
     {
-        try {
-            if ($strict) {
-                return $value === true || $value === 1 || $value === '1' || $value === 'true';
-            }
-            if ($value === null) {
-                return false;
-            }
-            if (is_bool($value) === true) {
-                return $value;
-            }
-
-            if (is_int($value) === true || is_float($value) === true) {
-                return $value != 0;
-            }
-
-            $list = $customTruthies ?? self::$truthyValues;
-            foreach ($list as $truthy) {
-                if (self::compare($value, $truthy) === true) {
-                    return true;
-                }
-            }
-
-            if (is_string($value)) {
-                $normalized = strtolower(trim($value));
-                foreach ($list as $truthy) {
-                    if (is_string($truthy) === true && strtolower($truthy) === $normalized) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        } catch (Throwable) {
-            return false;
-        }
+        return Safe::get($value, false, fn($v) => self::convert($v, $strict, $customTruthies));
     }
 
     /**
-     * Internal helper: smart comparison for any types.
+     * Internal conversion logic.
      *
-     * @param mixed $a
-     * @param mixed $b
+     * @param mixed $value
+     * @param bool $strict
+     * @param array<int, mixed>|null $customTruthies
+     *
      * @return bool
      */
-    private static function compare(mixed $a, mixed $b): bool
+    private static function convert(mixed $value, bool $strict, ?array $customTruthies): bool
     {
-        if (is_object($a) === true && is_object($b) === true) {
-            if ($a === $b) {
-                return true;
-            }
-            if (get_class($a) !== get_class($b)) {
-                return false;
-            }
+        if ($strict === true) {
+            return $value === true || $value === 1 || $value === '1' || $value === 'true';
+        }
+        if (is_bool($value) === true) {
+            return $value;
+        }
+        if (is_int($value) === true || is_float($value) === true) {
+            return $value != 0;
+        }
+        if ($value === null) {
+            return false;
+        }
 
-            return true;
-        }
-        if (is_object($a) === true && is_string($b) === true) {
-            return strcasecmp($a::class, $b) === 0;
-        }
-        if (is_string($a) === true && is_object($b) === true) {
-            return strcasecmp($a, $b::class) === 0;
-        }
-        if (gettype($a) === gettype($b)) {
-            return $a === $b;
-        }
-        if (is_scalar($a) === true && is_scalar($b) === true) {
-            return (string)$a === (string)$b;
+        $list = $customTruthies ?? self::$truthyValues;
+        if (is_string($value) === true) {
+            $normalized = mb_strtolower(trim($value));
+            foreach ($list as $truthy) {
+                if (is_string($truthy) === true && mb_strtolower($truthy) === $normalized) {
+                    return true;
+                }
+                if ($truthy === $value) {
+                    return true;
+                }
+            }
+        } else {
+            return in_array($value, $list, true) === true;
         }
 
         return false;

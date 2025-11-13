@@ -51,31 +51,32 @@ final class Safe
      * - Executes $callback only if the result came from $value (not from $default).
      * - Optionally casts the final value to a specific type.
      *
-     * @param mixed $value    The primary value or callable to retrieve.
-     * @param mixed $default  The default fallback value or callable if $value is null or fails.
+     * @param mixed $value The primary value or callable to retrieve.
+     * @param mixed $default The default fallback value or callable if $value is null or fails.
      * @param callable|null $transform A transformation callback applied only if $value was successful.
      * @param string|null $cast Optional type casting (Safe::CAST_* constants).
      *
      * @return mixed The safe, processed and optionally cast value.
      */
     public static function get(
-        mixed $value,
-        mixed $default = null,
+        mixed     $value,
+        mixed     $default = null,
         ?callable $transform = null,
-        ?string $cast = null
-    ): mixed {
+        ?string   $cast = null
+    ): mixed
+    {
         $result = null;
         $usedDefault = false;
 
         try {
-            $result = is_callable($value) ? $value() : $value;
+            $result = is_callable($value) === true ? $value() : $value;
         } catch (Throwable) {
             $usedDefault = true;
         }
 
         if ($result === null || $usedDefault) {
             try {
-                $result = is_callable($default) ? $default() : $default;
+                $result = is_callable($default) === true ? $default() : $default;
             } catch (Throwable) {
                 $result = null;
             }
@@ -85,7 +86,8 @@ final class Safe
         if ($usedDefault === false && $transform !== null) {
             try {
                 $result = $transform($result);
-            } catch (Throwable) {}
+            } catch (Throwable) {
+            }
         }
 
         if ($cast !== null) {
@@ -107,12 +109,12 @@ final class Safe
     {
         try {
             return match ($type) {
-                self::CAST_INT => (int) $value,
-                self::CAST_FLOAT => (float) $value,
-                self::CAST_STRING => (string) $value,
-                self::CAST_BOOL => (bool) $value,
-                self::CAST_ARRAY => (array) $value,
-                self::CAST_OBJECT => (object) $value,
+                self::CAST_INT => (int)$value,
+                self::CAST_FLOAT => (float)$value,
+                self::CAST_STRING => (string)$value,
+                self::CAST_BOOL => (bool)$value,
+                self::CAST_ARRAY => (array)$value,
+                self::CAST_OBJECT => (object)$value,
                 default => $value,
             };
         } catch (Throwable) {
