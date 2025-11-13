@@ -65,7 +65,7 @@ final class Truth
      */
     public static function of(mixed $value, bool $strict = false, ?array $customTruthies = null): bool
     {
-        return Safe::get($value, false, fn($v) => self::convert($v, $strict, $customTruthies));
+        return Safe::get($value, false, fn($v) => self::convert($v, $strict, $customTruthies), Safe::CAST_BOOL);
     }
 
     /**
