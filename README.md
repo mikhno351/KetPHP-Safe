@@ -17,6 +17,7 @@ composer require ket-php/utils-safe
 ### Safe:
 ```php
 use KetPHP\Utils\Safe;
+use KetPHP\Utils\Common\Cast;
 
 // Simple value
 $value = Safe::get('Hello'); 
@@ -43,7 +44,7 @@ $value = Safe::get(null, 'Fallback', fn($v) => strtoupper($v));
 echo $value; // Fallback
 
 // Optional casting
-$value = Safe::get('123', null, null, Safe::CAST_INT); 
+$value = Safe::get('123', null, null, Cast::INT); 
 echo $value; // 123 (integer)
 
 $data = ['known' => 'value'];
@@ -64,14 +65,14 @@ echo $value; // Default
 ```
 
 #### Constants for Casting:
-| Constant            | Description     |
-| ------------------- | --------------- |
-| `Safe::CAST_INT`    | Cast to integer |
-| `Safe::CAST_FLOAT`  | Cast to float   |
-| `Safe::CAST_STRING` | Cast to string  |
-| `Safe::CAST_BOOL`   | Cast to boolean |
-| `Safe::CAST_ARRAY`  | Cast to array   |
-| `Safe::CAST_OBJECT` | Cast to object  |
+| Constant        | Description     |
+|-----------------| --------------- |
+| `Cast::INT`     | Cast to integer |
+| `Cast::FLOAT`   | Cast to float   |
+| `Cast::STRING`  | Cast to string  |
+| `Cast::BOOLEAN` | Cast to boolean |
+| `Cast::ARRAY`   | Cast to array   |
+| `Cast::OBJECT`  | Cast to object  |
 
 ### Truth:
 ```php
@@ -97,11 +98,13 @@ var_dump(Truth::of(fn() => 'no')); // false
 
 // Custom truthy list for a single call
 $custom = ['foo', 'bar', 123];
+
 var_dump(Truth::of('foo', false, $custom)); // true
 var_dump(Truth::of('baz', false, $custom)); // false
 
 // Configure global truthy values
 Truth::configure(['sure', 'ok']);
+
 var_dump(Truth::of('ok')); // true
 var_dump(Truth::of('yes')); // false (old default removed)
 ```
