@@ -15,7 +15,7 @@ use Throwable;
  *
  * Example:
  * ```
- * $data = ['known' => 'value'];
+ * $data = ['known' => '  value  '];
  *
  * echo Safe::get(@$data['known'], 'default', fn($v) => trim($v), Cast::STRING); // value
  * echo Safe::get(@$data['unknown'], 'default', 'trim', Cast::STRING); // default
