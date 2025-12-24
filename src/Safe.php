@@ -76,12 +76,15 @@ final class Safe
      * - Executes $callback only if the result came from $value (not from $default).
      * - Optionally casts the final value to a specific type.
      *
-     * @param mixed $value The primary value or callable to retrieve.
-     * @param mixed $default The default fallback value or callable if $value is null or fails.
-     * @param callable|null $transform A transformation callback applied only if $value was successful.
+     * @template T
+     * @template D
+     *
+     * @param T|callable():T|null $value The primary value or callable to retrieve.
+     * @param D|callable():D|null $default The default fallback value or callable if $value is null or fails.
+     * @param callable(T):mixed|null $transform A transformation callback applied only if $value was successful.
      * @param Cast|null|string $cast Optional type casting (Cast::* constants).
      *
-     * @return mixed The safe, processed and optionally cast value.
+     * @return (T|D)|mixed The safe, processed and optionally cast value.
      */
     public static function get(mixed $value, mixed $default = null, ?callable $transform = null, Cast|null|string $cast = null): mixed
     {

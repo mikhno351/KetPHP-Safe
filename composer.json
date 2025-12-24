@@ -1,6 +1,6 @@
 {
   "name": "ket-php/utils-safe",
-  "description": "Lightweight PHP utility for safely accessing variables, handling undefined values, and converting values to boolean without errors.",
+  "description": "Lightweight PHP utility for safely accessing variables, handling undefined values without errors.",
   "keywords": [
     "php",
     "safe",
@@ -9,8 +9,6 @@
     "error-handling",
     "undefined",
     "null-safe",
-    "truthy",
-    "boolean",
     "ketphp",
     "ket-php"
   ],
